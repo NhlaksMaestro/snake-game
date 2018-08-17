@@ -1,0 +1,12 @@
+  canvas {
+    border: 5px solid white;
+    width:80%;
+    height:60%;
+    /*
+     background-image:  */
+  }
+.container{
+  display: flex;
+  justify-content: center;
+  padding-top: 2%;
+}

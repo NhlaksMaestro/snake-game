@@ -1,0 +1,105 @@
+
+.overlay {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: white;
+  background-color: white;
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+.overlay-showing {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: white;
+  background-color:white;
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.overlay-content {
+  position: relative;
+  top: 25%;
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.overlay a {
+  display: flex;
+  padding: 8px;
+  text-decoration: none;
+  font-size: 60px;
+  color: #818181;
+  transition: 0.3s;
+}
+.overlay-showing a {
+  display: flex;
+  padding: 8px;
+  text-decoration: none;
+  font-size: 60px;
+  color: #818181;
+  transition: 0.3s;
+}
+
+.overlay a:hover, .overlay a:focus {
+  color: #f1f1f1;
+}
+
+.overlay-showing a:hover, .overlay-showing a:focus {
+  color: #f1f1f1;
+}
+.overlay .closebtn {
+  position: absolute;
+  top: 20px;
+  left: -45px;
+  font-size: 60px;
+}
+
+.overlay-showing .closebtn {
+  position: absolute;
+  top: 20px;
+  left: -45px;
+  font-size: 60px;
+}
+
+@media screen and (max-height: 450px) {
+.overlay a {font-size: 20px}
+.overlay-showing a {font-size: 20px}
+.overlay .closebtn {
+  font-size: 40px;
+  top: 15px;
+  left: -35px;
+}
+.overlay-showing .closebtn {
+  font-size: 40px;
+  top: 15px;
+  left: -35px;
+}
+}
+.square-red {
+  height: 50px;
+  width: 50px;
+  background-color:rgb(252, 4, 4);
+}
+.square-black {
+  height: 50px;
+  width: 50px;
+  background-color: black;
+}
+.circle-lime {
+  height: 50px;
+  width: 50px;
+  background-color: lime;
+  border-radius: 50%;
+}
+.wrapper {
+  justify-content: space-around;
+}

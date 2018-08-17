@@ -1,0 +1,18 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+</div>
+<app-snake-playground></app-snake-playground>
+
+<div id="myNav" [ngClass]="cssClass" *ngIf="(cssClass==='overlay')? false: true">
+  <a href="javascript:void(0)"  (click)="closeNav()">&times;</a>
+  <div class="overlay-content">
+      <a href="#" class="wrapper"><div class="circle-lime"></div>The food the snake eats.</a>
+      <a href="#" class="wrapper"><div class="square-black"></div>The snakes obstacles to avoid.</a>
+      <a href="#" class="wrapper"><div class="square-red"></div>The snakes posion which will sinhrk the snakes body.</a>
+  </div>
+</div>
+
+<span style="font-size:30px;cursor:pointer;position: absolute; top: 0px; color:  orangered;" (click)="openNav()">&#9776;</span>
