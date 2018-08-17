@@ -53,54 +53,40 @@ export class SnakePlaygroundComponent implements OnInit {
     if (this.rafID === null || undefined) {
       return;
     }
-    // if (this.timestamp >= this.start) {
-    //   console.log("this.timestamp  === ", this.timestamp );
-    //   console.log("this.start  === ", this.start );
-      // this.drawGrid();
-      // slow game loop to 15 fps instead of 60 - 60/15 = 4
-      if (++this.count < 5) {
-        return;
-      }
-      // this.context = this.context;
-      this.count = 0;
-      this.context.clearRect(
-        0,
-        0,
-        this.canvas.nativeElement.width,
-        this.canvas.nativeElement.height
-      );
-      this.snake.x += this.snake.dx;
-      this.snake.y += this.snake.dy;
-      this.horizontalSnakePosition();
-      this.verticalSnakePosition();
-      // keep track of where snake has been. front of the array is always the head
-      this.snake.cells.unshift({ x: this.snake.x, y: this.snake.y });
-      // remove cells as we move away from them
-      this.removeCells();
-      // draw food
-      if (this.intervalID === 0) {
-        if (this.counterDownValue === 0) {
-          this.intervalID = setInterval(this.drawPosion.bind(this), 0);
-        } else {
-          this.counterDownValue++;
-        }
+    // this.drawGrid();
+    if (++this.count < 5) {
+      return;
+    }
+    this.count = 0;
+    this.context.clearRect(
+      0,
+      0,
+      this.canvas.nativeElement.width,
+      this.canvas.nativeElement.height
+    );
+    this.snake.x += this.snake.dx;
+    this.snake.y += this.snake.dy;
+    this.horizontalSnakePosition();
+    this.verticalSnakePosition();
+    this.snake.cells.unshift({ x: this.snake.x, y: this.snake.y });
+    this.removeCells();
+    if (this.intervalID === 0) {
+      if (this.counterDownValue === 0) {
+        this.intervalID = setInterval(this.drawPosion.bind(this), 0);
       } else {
-        if (this.counterDownValue === this.counterTimer) {
-          this.stopShowingPoison();
-        } else {
-          this.counterDownValue++;
-        }
+        this.counterDownValue++;
       }
-      this.drawFood();
-      // draw obstacles
-      this.drawObstacles();
-      // console.log('obstaclesList ==== ', this.obstaclesList);
-      // console.log('this.food === ', this.food);
-      // draw snake
-      this.drawSnake();
-      this.start = this.timestamp + this.frameDuration;
-
-   // }
+    } else {
+      if (this.counterDownValue === this.counterTimer) {
+        this.stopShowingPoison();
+      } else {
+        this.counterDownValue++;
+      }
+    }
+    this.drawFood();
+    this.drawObstacles();
+    this.drawSnake();
+    this.start = this.timestamp + this.frameDuration;
   }
   stopShowingPoison() {
     clearInterval(this.intervalID);
@@ -108,8 +94,7 @@ export class SnakePlaygroundComponent implements OnInit {
     this.counterDownValue = -100;
   }
   drawGrid() {
-    let h = 0,
-      w = 0;
+    let h = 0, w = 0;
     if (this.canvas.nativeElement.clientHeight % this.grid !== 0) {
       h =
         this.canvas.nativeElement.clientHeight -
@@ -132,8 +117,6 @@ export class SnakePlaygroundComponent implements OnInit {
       this.context.moveTo(x, 0);
       this.context.lineTo(x, h);
     }
-    // console.log('this.canvas.nativeElement.clientWidth', this.canvas.nativeElement.clientWidth);
-    // console.log('this.canvas.nativeElement.clientHeight', this.canvas.nativeElement.clientHeight);
     this.context.strokeStyle = '#ddd';
     this.context.stroke();
   }
@@ -174,7 +157,7 @@ export class SnakePlaygroundComponent implements OnInit {
   }
 
   get randomCoordCalculation(): number {
-    return this.getRandomGridCoordinate(0, 20) * this.grid; // * this.grid;
+    return this.getRandomGridCoordinate(0, 20) * this.grid;
   }
   areCoordsTaken(obstacle: Obstacle) {
     return obstacle.x === this.food.x && obstacle.y === this.food.y;
@@ -248,9 +231,9 @@ export class SnakePlaygroundComponent implements OnInit {
     this.intervalID = 0;
     this.counterTimer = 100;
     this.counterDownValue = 0;
-    this.framesPerSecond = 30,
-    this.start = 0,
-    this.frameDuration = 1000 / this.framesPerSecond;
+    (this.framesPerSecond = 30),
+      (this.start = 0),
+      (this.frameDuration = 1000 / this.framesPerSecond);
     this.timestamp = new Date().getTime();
     this.snake = new Snake();
     this.food = new Food();
@@ -392,7 +375,6 @@ export class SnakePlaygroundComponent implements OnInit {
       this.canvas.nativeElement.clientHeight -
       (this.canvas.nativeElement.clientHeight % this.grid);
 
-    // If it's resolution does not match change it
     if (
       this.canvas.nativeElement.width !== width ||
       this.canvas.nativeElement.height !== height
