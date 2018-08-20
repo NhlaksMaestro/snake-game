@@ -7,7 +7,6 @@
   top: 0;
   left: 0;
   background-color: white;
-  background-color: white;
   overflow-x: hidden;
   transition: 0.5s;
 }
@@ -19,7 +18,6 @@
   top: 0;
   left: 0;
   background-color: white;
-  background-color:white;
   overflow-x: hidden;
   transition: 0.5s;
 }
@@ -36,7 +34,7 @@
   display: flex;
   padding: 8px;
   text-decoration: none;
-  font-size: 60px;
+  font-size: 20px;
   color: #818181;
   transition: 0.3s;
 }
@@ -44,7 +42,7 @@
   display: flex;
   padding: 8px;
   text-decoration: none;
-  font-size: 60px;
+  font-size: 20px;
   color: #818181;
   transition: 0.3s;
 }
@@ -85,21 +83,35 @@
 }
 }
 .square-red {
-  height: 50px;
-  width: 50px;
+  height: 20px;
+  width: 20px;
   background-color:rgb(252, 4, 4);
 }
 .square-black {
-  height: 50px;
-  width: 50px;
-  background-color: black;
+  height: 20px;
+  width: 20px;
+  background-color: purple;
 }
 .circle-lime {
-  height: 50px;
-  width: 50px;
+  height: 20px;
+  width: 20px;
   background-color: lime;
   border-radius: 50%;
 }
 .wrapper {
   justify-content: space-around;
 }
+
+.relative {
+  font-size:30px;
+  cursor:pointer;
+  color:  orangered;
+  position: relative;
+  background: grey;
+  }
+  .floater {
+  float: right;
+  }
+  .clearfloat {
+  clear: right;
+  }

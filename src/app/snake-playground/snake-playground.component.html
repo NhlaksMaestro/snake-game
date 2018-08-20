@@ -1,6 +1,15 @@
-<div class="btn-group" >
+<div class="btn-group" style="align-items:center; text-align:center">
     <button (click)="startUp()" *ngIf="rafID === null||undefined">Restart</button>
-  </div>
+    <form [formGroup]="myForm">
+        <label for="txtNumberOfObstacles">Number Of Obstacles</label>
+        <input type="number"
+               id="txtNumberOfObstacles"
+               [min]="3"
+               [max]="15"
+               [formControl]="myForm.get('txtNumberOfObstacles')"
+               [(ngModel)]="numberOfObstacles">
+  </form>
+</div>
 <div class="container">
   <canvas id="snake-game" #snakeGameCanvas></canvas>
 </div>

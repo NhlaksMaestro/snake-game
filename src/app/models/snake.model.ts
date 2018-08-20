@@ -7,6 +7,7 @@ export class Snake {
     this.cells = [];
     this.snakeBody = 4;
     this.counter = 4;
+    this.score = 0;
   }
   public x: number;
   public y: number;
@@ -15,4 +16,5 @@ export class Snake {
   public cells: Array<any>;
   public snakeBody: number;
   public counter: number;
+  public score: number;
 }

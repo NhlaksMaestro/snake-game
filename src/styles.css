@@ -1,5 +1,47 @@
-html, body {
-    height: 100%;
-    margin: 0;
-    background-color: cadetblue;
-  }
+html,
+body {
+  height: 100%;
+  margin: auto;
+  overflow: hidden;
+  margin: auto;
+  background-color: cadetblue;
+}
+
+.btn-group {
+  /* display: flex; */
+  /* justify-content: space-between; */
+  text-align: center;
+}
+
+.btn-group button {
+  background-color: #4CAF50;
+  /* Green background */
+  border: 1px solid transparent;
+  /* Green border */
+  color: white;
+  /* White text */
+  padding: 10px 24px;
+  /* Some padding */
+  cursor: pointer;
+  /* Pointer/hand icon */
+  margin: auto;
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none;
+  /* Prevent double borders */
+}
+
+/* Clear floats (clearfix hack) */
+
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Add a background color on hover */
+
+.btn-group button:hover {
+  background-color: #3e8e07;
+}

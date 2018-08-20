@@ -10,6 +10,7 @@ import { Snake } from '../models/snake.model';
 import { Food } from '../models/food.model';
 import { Obstacle } from 'src/app/models/obstacle.model';
 import { Posion } from '../models/poison.model';
+import {FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-snake-playground',
@@ -38,26 +39,65 @@ export class SnakePlaygroundComponent implements OnInit {
   start: number;
   frameDuration: number;
   timestamp: number;
+  numberOfObstacles: number;
+  myForm: FormGroup;
 
   @ViewChild('snakeGameCanvas')
   canvas: ElementRef<HTMLCanvasElement>;
   public context: CanvasRenderingContext2D;
 
-  constructor() {}
+  constructor(fb: FormBuilder) {
+    this.numberOfObstacles = 3;
+    this.myForm = fb.group({
+      'txtNumberOfObstacles': [this.numberOfObstacles]
+    });
+  }
 
   ngOnInit() {
     this.startUp();
+  }
+  startUp() {
+    this.count = 0;
+    this.grid = 20;
+    this.intervalID = 0;
+    this.framesPerSecond = 30,
+    this.counterTimer = 100;
+    this.counterDownValue = 0;
+    this.start = 0,
+    this.timestamp = new Date().getTime();
+    this.frameDuration = 1000 / this.framesPerSecond;
+    this.snake = new Snake();
+    this.food = new Food();
+    this.posion = new Posion();
+    this.obstacle = new Obstacle();
+    this.snake.dx = this.grid;
+    this.context = (this.canvas.nativeElement as HTMLCanvasElement).getContext(
+      '2d'
+    );
+    this.obstaclesList = this.generateObstacles();
+    const x = this.randomCoordCalculation(1, this.canvas.nativeElement.width);
+    const y = this.randomCoordCalculation(1, this.canvas.nativeElement.height);
+    this.food.x = this.alignFoodCoordinates(x);
+    this.food.y = this.alignFoodCoordinates(y);
+    this.posion.x = null;
+    this.posion.y = null;
+    this.snake.score = 0;
+    this.resizeGame('');
+    this.rafID = requestAnimationFrame(this.loop.bind(this));
   }
   loop(): any {
     requestAnimationFrame(this.loop.bind(this));
     if (this.rafID === null || undefined) {
       return;
     }
-    // this.drawGrid();
     if (++this.count < 5) {
       return;
     }
+    if (this.obstaclesList.length !== this.numberOfObstacles) {
+      this.obstaclesList = this.generateObstacles();
+    }
     this.count = 0;
+
     this.context.clearRect(
       0,
       0,
@@ -70,6 +110,15 @@ export class SnakePlaygroundComponent implements OnInit {
     this.verticalSnakePosition();
     this.snake.cells.unshift({ x: this.snake.x, y: this.snake.y });
     this.removeCells();
+    this.drawScore();
+    this.drawFood();
+    this.drawObstacles();
+    this.drawSnake();
+    this.runInterval();
+    this.start = this.timestamp + this.frameDuration;
+  }
+
+  runInterval(): void {
     if (this.intervalID === 0) {
       if (this.counterDownValue === 0) {
         this.intervalID = setInterval(this.drawPosion.bind(this), 0);
@@ -83,18 +132,16 @@ export class SnakePlaygroundComponent implements OnInit {
         this.counterDownValue++;
       }
     }
-    this.drawFood();
-    this.drawObstacles();
-    this.drawSnake();
-    this.start = this.timestamp + this.frameDuration;
   }
+
   stopShowingPoison() {
     clearInterval(this.intervalID);
     this.intervalID = 0;
     this.counterDownValue = -100;
   }
   drawGrid() {
-    let h = 0, w = 0;
+    let h = 0,
+      w = 0;
     if (this.canvas.nativeElement.clientHeight % this.grid !== 0) {
       h =
         this.canvas.nativeElement.clientHeight -
@@ -147,40 +194,33 @@ export class SnakePlaygroundComponent implements OnInit {
   }
   generateObstacles(): Array<Obstacle> {
     const obstaclesList: Array<Obstacle> = [];
-    for (let index = 0; index < 3; index++) {
+    for (let index = 0; index < this.numberOfObstacles; index++) {
       const obstacle = new Obstacle();
-      obstacle.x = this.randomCoord();
-      obstacle.y = this.randomCoord();
+      const x = this.randomCoordCalculation(0, this.canvas.nativeElement.width);
+      const y = this.randomCoordCalculation(
+        0,
+        this.canvas.nativeElement.height
+      );
+      obstacle.x = x;
+      obstacle.y = y;
       obstaclesList.push(obstacle);
     }
     return obstaclesList;
   }
-
-  get randomCoordCalculation(): number {
-    return this.getRandomGridCoordinate(0, 20) * this.grid;
-  }
-  areCoordsTaken(obstacle: Obstacle) {
-    return obstacle.x === this.food.x && obstacle.y === this.food.y;
-  }
-  randomFoodCoord(): number {
-    let randomCoord = this.randomCoord();
-    while (
-      randomCoord % 2 !== 0 &&
-      this.obstaclesList.some(this.areCoordsTaken)
-    ) {
-      randomCoord = this.randomCoordCalculation;
-    }
-    return randomCoord - 10;
-  }
-  randomCoord(): number {
-    let randomCoord = 1;
-    while (randomCoord % 2 !== 0) {
-      randomCoord = this.randomCoordCalculation;
+  randomCoordCalculation(min, max): number {
+    // tslint:disable-next-line:radix
+    let randomCoord = parseInt(Math.random() * (max - min) + min);
+    while (randomCoord % this.grid > 0) {
+      // tslint:disable-next-line:radix
+      randomCoord = parseInt(Math.random() * (max - min) + min);
     }
     return randomCoord;
   }
   drawObstacles(): void {
-    for (let index = 0; index < this.obstaclesList.length; index++) {
+    console.log('this.food ==== ', this.food);
+    console.log('this.canvas.nativeElement.width ==== ', this.canvas.nativeElement.height);
+    console.log('this.canvas.nativeElement.height ==== ', this.canvas.nativeElement.height);
+    for (let index = 0; index < this.numberOfObstacles; index++) {
       this.context.fillStyle = 'purple';
       this.context.fillRect(
         this.obstaclesList[index].x,
@@ -206,11 +246,29 @@ export class SnakePlaygroundComponent implements OnInit {
   }
   drawPosion(): void {
     if (this.posion.x === null && this.posion.y === null) {
-      this.posion.x = this.randomCoord();
-      this.posion.y = this.randomCoord();
+      const x = this.randomCoordCalculation(0, this.canvas.nativeElement.width);
+      const y = this.randomCoordCalculation(
+        0,
+        this.canvas.nativeElement.height
+      );
+      this.posion.x = this.alignCoordinates(x);
+      this.posion.y = this.alignCoordinates(y);
     }
     this.context.fillStyle = 'red';
     this.context.fillRect(this.posion.x, this.posion.y, this.grid, this.grid);
+  }
+  scoreSnake(): void {
+    if (this.numberOfObstacles > 0 && this.numberOfObstacles <= 3) {
+      this.snake.score += 1;
+    } else if (this.numberOfObstacles > 3 && this.numberOfObstacles <= 6) {
+      this.snake.score += 3;
+    } else if (this.numberOfObstacles > 6 && this.numberOfObstacles <= 9) {
+      this.snake.score += 6;
+    } else if (this.numberOfObstacles > 9 && this.numberOfObstacles <= 12) {
+      this.snake.score += 9;
+    } else if (this.numberOfObstacles > 12 && this.numberOfObstacles <= 15) {
+      this.snake.score += 12;
+    }
   }
   drawSnake(): void {
     this.context.fillStyle = 'black';
@@ -225,31 +283,25 @@ export class SnakePlaygroundComponent implements OnInit {
       }
     );
   }
-  startUp(): void {
-    this.count = 0;
-    this.grid = 20;
-    this.intervalID = 0;
-    this.counterTimer = 100;
-    this.counterDownValue = 0;
-    (this.framesPerSecond = 30),
-      (this.start = 0),
-      (this.frameDuration = 1000 / this.framesPerSecond);
-    this.timestamp = new Date().getTime();
-    this.snake = new Snake();
-    this.food = new Food();
-    this.posion = new Posion();
-    this.obstacle = new Obstacle();
-    this.snake.dx = this.grid;
-    this.context = (this.canvas.nativeElement as HTMLCanvasElement).getContext(
-      '2d'
-    );
-    this.obstaclesList = this.generateObstacles();
-    this.food.x = this.randomFoodCoord();
-    this.food.y = this.randomFoodCoord();
-    this.posion.x = null;
-    this.posion.y = null;
-    this.resizeGame('');
-    this.rafID = requestAnimationFrame(this.loop.bind(this));
+  alignFoodCoordinates(createdCoordinate: number): number {
+    let randomCoord = createdCoordinate;
+    while (
+      randomCoord % this.grid > 0 &&
+      this.obstaclesList.some(this.areCoordsTaken)
+    ) {
+      randomCoord = this.randomCoordCalculation(0, randomCoord);
+    }
+    return randomCoord - 10;
+  }
+  alignCoordinates(createdCoordinate: number): number {
+    let randomCoord = createdCoordinate;
+    while (randomCoord % this.grid > 0) {
+      randomCoord = this.randomCoordCalculation(0, randomCoord);
+    }
+    return randomCoord;
+  }
+  areCoordsTaken(obstacle: Obstacle) {
+    return obstacle.x === this.food.x && obstacle.y === this.food.y;
   }
   gameOver(failureReason: string): void {
     cancelAnimationFrame(this.rafID);
@@ -271,15 +323,27 @@ export class SnakePlaygroundComponent implements OnInit {
       this.canvas.nativeElement.height / 2 + 20
     );
   }
+  drawScore(): void {
+    this.context.fillStyle = 'black';
+    this.context.textAlign = 'center';
+    this.context.font = 'normal bold 20px serif';
+    this.context.fillText(
+      `${this.snake.score}`,
+      this.canvas.nativeElement.width - 20,
+      this.canvas.nativeElement.height - 20
+    );
+  }
   collisionOccourance(): void {
+    const x = this.randomCoordCalculation(1, this.canvas.nativeElement.width);
+    const y = this.randomCoordCalculation(1, this.canvas.nativeElement.height);
     this.snake.x = 0;
     this.snake.y = 0;
     this.snake.cells = [];
     this.snake.snakeBody = 4;
     this.snake.dx = this.grid;
     this.snake.dy = 0;
-    this.food.x = this.randomFoodCoord();
-    this.food.y = this.randomFoodCoord();
+    this.food.x = this.alignFoodCoordinates(x);
+    this.food.y = this.alignFoodCoordinates(y);
     this.posion.x = null;
     this.posion.y = null;
     this.obstaclesList = this.generateObstacles();
@@ -290,8 +354,14 @@ export class SnakePlaygroundComponent implements OnInit {
     if (cell.x === this.food.x - 10 && cell.y === this.food.y - 10) {
       this.snake.snakeBody++;
       this.snake.counter++;
-      this.food.x = this.randomFoodCoord() - 20;
-      this.food.y = this.randomFoodCoord() - 20;
+      const x = this.randomCoordCalculation(1, this.canvas.nativeElement.width);
+      const y = this.randomCoordCalculation(
+        1,
+        this.canvas.nativeElement.height
+      );
+      this.food.x = this.alignFoodCoordinates(x);
+      this.food.y = this.alignFoodCoordinates(y);
+      this.scoreSnake();
     }
   }
   checkIfSnakeCollidedWithObjects(cell: any, index: number): void {
@@ -314,6 +384,7 @@ export class SnakePlaygroundComponent implements OnInit {
         this.posion.x = null;
         this.posion.y = null;
         this.snake.cells.pop();
+        this.snake.score--;
       }
     }
   }
@@ -358,15 +429,14 @@ export class SnakePlaygroundComponent implements OnInit {
       }
     }
   }
-
   @HostListener('window:resize', ['$event'])
   @HostListener('window:orientationchange', ['$event'])
   resizeGame(event: any) {
     const imgData = this.context.getImageData(
       0,
       0,
-      this.canvas.nativeElement.width,
-      this.canvas.nativeElement.height
+      this.canvas.nativeElement.clientWidth,
+      this.canvas.nativeElement.clientHeight
     );
     const width =
       this.canvas.nativeElement.clientWidth -

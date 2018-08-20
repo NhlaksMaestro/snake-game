@@ -1,16 +1,37 @@
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-</div>
+<!-- <div style="text-align:center">
+  <h1>{{ title }}!</h1>
+</div> -->
 <app-snake-playground></app-snake-playground>
 
 <div id="myNav" [ngClass]="cssClass" *ngIf="(cssClass==='overlay')? false: true">
-  <a href="javascript:void(0)"  (click)="closeNav()">&times;</a>
-  <div class="overlay-content">
-      <a href="#" class="wrapper"><div class="circle-lime"></div>The food the snake eats.</a>
-      <a href="#" class="wrapper"><div class="square-black"></div>The snakes obstacles to avoid.</a>
-      <a href="#" class="wrapper"><div class="square-red"></div>The snakes posion which will sinhrk the snakes body.</a>
+  <a href="javascript:void(0)" (click)="closeNav()">&times;</a>
+  <div>
+    <h1>Game Items</h1>
+    <div class="overlay-content">
+      <a href="#" class="wrapper">
+        <span class="circle-lime"></span><p>The food the snake eats.</p></a>
+      <a href="#" class="wrapper">
+        <span class="square-black"></span><p>snakes obstacles to avoid.</p></a>
+      <a href="#" class="wrapper">
+        <span class="square-red"></span><p>The snakes posion which will sinhrk the snakes body.</p></a>
+      <a href="#" class="wrapper">
+        <span class="square-red"></span><p>Restart Button</p></a>
+        <div class="relative">&#9776;
+            <p class="floater">Menu Button</p>
+        </div>
+
+      <a href="#" class="wrapper">
+        <span class="square-red"></span><p>Increaser Number Obstacles</p></a>
+    </div>
+  </div>
+  <div>
+    <h1>Controls</h1>
+    <div class="overlay-content">
+      <a href="#" class="wrapper">
+        <div class="circle-lime"></div>Mouse movement</a>
+      <a href="#" class="wrapper">
+        <div class="square-black"></div>Pause/Resume</a>
+    </div>
   </div>
 </div>
 
